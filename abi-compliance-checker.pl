@@ -1764,7 +1764,7 @@ sub get_CmdPath($)
         }
     }
     my $Path = search_Tools($Name);
-    if(not $Path and $OSgroup eq "windows") {
+    if(not $Path and ($OSgroup eq "windows" or $OSgroup eq "cygwin")) {
         $Path = search_Tools($Name.".exe");
     }
     if(not $Path and $BinUtils{$Name})
@@ -1793,7 +1793,7 @@ sub get_CmdPath($)
     if(not $Path) {
         $Path = search_Cmd($Name);
     }
-    if(not $Path and $OSgroup eq "windows")
+    if(not $Path and ($OSgroup eq "windows" or $OSgroup eq "cygwin"))
     { # search for *.exe file
         $Path=search_Cmd($Name.".exe");
     }
@@ -14642,6 +14642,9 @@ sub get_OSgroup()
     elsif($N=~/symbian|epoc/i) {
         return "symbian";
     }
+    elsif($N=~/cygwin/i) {
+        return "cygwin";
+	}
     elsif($N=~/win/i) {
         return "windows";
     }
@@ -19617,6 +19620,7 @@ sub detect_inc_default_paths()
     foreach my $Line (split(/\n/, `$GCC_PATH -v -x c++ -E \"$TMP_DIR/empty.h\" 2>&1`))
     { # detecting GCC default include paths
         next if(index($Line, "/cc1plus ")!=-1);
+	next if(index($Line, "/cc1plus.exe ")!=-1);
         
         if($Line=~/\A[ \t]*((\/|\w+:\\).+)[ \t]*\Z/)
         {
