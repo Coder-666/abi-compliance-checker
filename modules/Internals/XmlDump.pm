@@ -163,7 +163,7 @@ sub createXmlDump($)
                 }
                 $ABI_DUMP .= closeTag("vtable");
             }
-            if(my $BTid = $TInfo{"BaseType"}{"Tid"}) {
+            if(my $BTid = $TInfo{"BaseType"}) {
                 $ABI_DUMP .= addTag("base_type", $BTid);
             }
             if(my @BaseIDs = keys(%{$TInfo{"Base"}}))
